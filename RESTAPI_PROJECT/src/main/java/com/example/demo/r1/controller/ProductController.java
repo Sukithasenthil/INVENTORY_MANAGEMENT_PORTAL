@@ -1,6 +1,8 @@
 package com.example.demo.r1.controller;
 
 import java.util.List;
+
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import com.example.demo.r1.model.ProductModel;
 import com.example.demo.r1.service.ProductService;
@@ -28,7 +29,7 @@ pser.saveProduct(pr);
 return "data saved";
 }
 @GetMapping("/getProduct")
-public List<ProductModel> getHotelInfo()
+public List<ProductModel> getProductInfo()
 {
 	return pser.getProduct();
 }
@@ -51,13 +52,13 @@ public ResponseEntity<String> updateProductInfo(@PathVariable int id,@RequestBod
  }
 
 
-@DeleteMapping("/deleteHotel/{id}")
+@DeleteMapping("/deleteProduct/{id}")
 public String removeProduct(@PathVariable("id")int id)
 {
 	pser.deleteProduct(id);
-	return "Hotel with Id"+id+" is deleted";
+	return "Product with Id"+id+" is deleted";
 }
-@GetMapping("/user/{userId}")
+@DeleteMapping("/deleteProductif/{userId}")
 public ResponseEntity<?> getUserId(@PathVariable int userId){
 	  Optional <ProductModel> product=pser.getUserId(userId);
 	  if(product != null) {
@@ -65,5 +66,40 @@ public ResponseEntity<?> getUserId(@PathVariable int userId){
 	  }
 	  return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not available with ID"+userId+"not found");
 }
+//sorting ascending
+@GetMapping("/sortAsc/{name}")
+public List<ProductModel> sortasc(@PathVariable("name")String prodname)
+{
+	  return pser.sortByAsc(prodname);
+}
+//sorting descending
+@GetMapping("/sortDesc/{name}")
+public List<ProductModel> sortdsc(@PathVariable("name")String name)
+{
+	  return pser.sortByDsc(name);
+}
+
+//pagination
+@GetMapping("/pagination/{num}/{size}")
+public List<ProductModel> pagination(@PathVariable("num") int num,@PathVariable("size") int size){
+	return pser.pagination(num, size);
+}
+//pagination and sorting
+@GetMapping("/pagination/{num}/{size}/{name}")
+public List<ProductModel> paginationAndSorting(@PathVariable("num") int num,@PathVariable("size") int size,@PathVariable("name") String prodname){
+	return pser.paginationAndSorting(num, size, prodname);
+}
+//Queries
+@GetMapping("/getAllrows")
+public List<ProductModel> getAllrows()
+{
+	 return pser.getAllrows();
+}
+//delete
+	//@DeleteMapping("/deleteProducts/{id}")
+	//public String deleteRow(@PathVariable("id") int id) {
+	//	 return pser.deleteRowByid(id)+" id deleted";
+	// }
+
 
 }
